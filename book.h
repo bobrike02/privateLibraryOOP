@@ -17,7 +17,7 @@ public:
      * @param name Имя автора.
      * @param surname Фамилия автора.
      */
-    Author(std::string name, std::string surname) : name(name), surname(surname) {}
+    Author(const std::string &name, const std::string &surname) : name(name), surname(surname) {}
 
     /**
      * Получить имя автора.
@@ -47,7 +47,7 @@ public:
 class Book {
 private:
     std::string name;  // название книги
-    std::vector <Author> authors;  // авторы книги
+    std::vector<Author> authors;  // авторы книги
     std::vector<long> readingDates;  // даты чтения книги (в виде чисел дней)
     short int rating;  // оценка книги по десятибалльной шкале
 public:
@@ -57,16 +57,17 @@ public:
      * @param name Название книги.
      * @param authors Список авторов книги.
      */
-    Book(std::string name, std::vector <Author> authors) : name(name), authors(authors), rating(0) {}
+    Book(const std::string &name, const std::vector<Author> &authors) : name(name), authors(authors), rating(0) {}
 
     /**
      * Получить оценку книги.
      *
      * @return Оценка книги.
      */
-    short getRating() {
+    short int getRating() const {
         return rating;
     }
+
 
     /**
      * Установить оценку книге.
@@ -74,14 +75,14 @@ public:
      * @param newRating Новая оценка книги.
      * @return true, если оценка установлена успешно, false - в противном случае.
      */
-    bool setRating(short int newRating);
+    bool setRating(const short int &newRating);
 
     /**
      * Добавить дату чтения книги.
      *
      * @param readingDate Дата чтения книги в виде числа дней.
      */
-    void addReadingDate(long readingDate) {
+    void addReadingDate(const long &readingDate) {
         readingDates.push_back(readingDate);
     }
 
@@ -90,7 +91,7 @@ public:
      *
      * @return Список дат чтения книги в виде чисел дней.
      */
-    std::vector<long> getReadingDates() {
+    const std::vector<long>& getReadingDates() const {
         return readingDates;
     }
 
@@ -106,7 +107,7 @@ public:
      * @param other Другая книга, с которой сравниваем.
      * @return true, если название данной книги лексикографически меньше, чем название другой книги.
      */
-    bool operator<(const Book other);
+    bool operator<(const Book &other);
 
     /**
     * Оператор сравнения равенства для книг.
@@ -115,14 +116,14 @@ public:
     * @param other Другая книга, с которой сравниваем.
     * @return true, если название данной книги равно названию другой книги.
     */
-    bool operator==(const Book other);
+    bool operator==(const Book &other);
 
     /**
      * Получить название книги.
      *
      * @return Название книги.
      */
-    std::string getName() {
+    const std::string getName() const {
         return name;
     }
 
@@ -131,7 +132,7 @@ public:
      *
      * @return Вектор авторов книги.
      */
-    std::vector <Author> getAuthors() {
+    const std::vector<Author>& getAuthors() const {
         return authors;
     }
 };
@@ -149,11 +150,10 @@ public:
      * @param fileType Название формата книги.
      * @param fileSize Объём файла книги.
      */
-    EBook(std::string name, std::vector <Author> authors, std::string fileType, long fileSize) : Book(name, authors),
-                                                                                  fileType(fileType),
-                                                                                  fileSize(fileSize) {}
-
-
+    EBook(const std::string &name, const std::vector<Author> &authors, const std::string &fileType,
+          const long &fileSize) : Book(name, authors),
+                                  fileType(fileType),
+                                  fileSize(fileSize) {}
 
     /**
      * Получить название формата книги.
@@ -163,7 +163,6 @@ public:
     std::string getFileType() const {
         return fileType;
     }
-
 
     /**
      * Получить объём файла книги.
@@ -188,8 +187,9 @@ public:
      * @param pages Количество страниц книги.
      * @param condition Состояние книги по десятибалльной шкале.
      */
-    PBook(std::string name, std::vector <Author> authors, int pages, short int condition) : Book(name, authors), pages(pages),
-                                                                              condition(condition) {}
+    PBook(const std::string &name, const std::vector<Author> &authors, const int &pages, const short int &condition) :
+            Book(name, authors), pages(pages), condition(condition) {}
+
     /**
      * Получить количество страниц книги.
      *
@@ -214,5 +214,5 @@ public:
      * @param newCondition Новое состояние книги по десятибалльной шкале.
      * @return true, если состояние установлено успешно, false - в противном случае.
      */
-    bool setCondition(short int newCondition);
+    bool setCondition(const short int &newCondition);
 };

@@ -1,7 +1,7 @@
 #include "book.h"
 
 
-bool PBook::setCondition(short newCondition) {
+bool PBook::setCondition(const short int& newCondition) {
     if (newCondition >= 0 && newCondition <= 10) {
         condition = newCondition;
         return true;
@@ -9,15 +9,15 @@ bool PBook::setCondition(short newCondition) {
     return false;
 }
 
-bool Book::operator==(const Book other) {
+bool Book::operator==(const Book& other) {
     return name.compare(other.name) == 0;
 }
 
-bool Book::operator<(const Book other) {
+bool Book::operator<(const Book& other) {
     return name.compare(other.name) < 0;
 }
 
-bool Book::setRating(short newRating) {
+bool Book::setRating(const short int& newRating) {
     if (newRating >= 0 && newRating <= 10) {
         Book::rating = newRating;
         return true;
