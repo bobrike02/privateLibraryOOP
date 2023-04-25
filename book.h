@@ -1,42 +1,9 @@
 #include <string>
 #include <vector>
+#ifndef PRIVATELIBRARY_BOOK_H
+#define PRIVATELIBRARY_BOOK_H
 
-/**
- * Класс автора книги.
- *
- * Хранит информацию об имени и фамилии автора.
- */
-class Author {
-private:
-    std::string name;
-    std::string surname;
-public:
-    /**
-     * Конструктор класса Author.
-     *
-     * @param name Имя автора.
-     * @param surname Фамилия автора.
-     */
-    Author(const std::string &name, const std::string &surname) : name(name), surname(surname) {}
 
-    /**
-     * Получить имя автора.
-     *
-     * @return Имя автора.
-     */
-    std::string getName() const {
-        return name;
-    }
-
-    /**
-     * Получить фамилию автора.
-     *
-     * @return Фамилия автора.
-     */
-    std::string getSurname() const {
-        return surname;
-    }
-};
 
 /**
  * Базовый класс книги.
@@ -47,8 +14,8 @@ public:
 class Book {
 private:
     std::string name;  // название книги
-    std::vector<Author> authors;  // авторы книги
-    std::vector<long> readingDates;  // даты чтения книги (в виде чисел дней)
+    std::string authors;  // автор книги
+    std::vector<int> readingDates;  // даты чтения книги (в виде чисел дней)
     short int rating;  // оценка книги по десятибалльной шкале
 public:
     /**
@@ -57,7 +24,7 @@ public:
      * @param name Название книги.
      * @param authors Список авторов книги.
      */
-    Book(const std::string &name, const std::vector<Author> &authors) : name(name), authors(authors), rating(0) {}
+    Book(const std::string &name, const std::string&authors) : name(name), authors(authors), rating(0) {}
 
     /**
      * Получить оценку книги.
@@ -82,7 +49,7 @@ public:
      *
      * @param readingDate Дата чтения книги в виде числа дней.
      */
-    void addReadingDate(const long &readingDate) {
+    void addReadingDate(const int &readingDate) {
         readingDates.push_back(readingDate);
     }
 
@@ -91,7 +58,7 @@ public:
      *
      * @return Список дат чтения книги в виде чисел дней.
      */
-    const std::vector<long>& getReadingDates() const {
+    std::vector<int>& getReadingDates()  {
         return readingDates;
     }
 
@@ -132,7 +99,7 @@ public:
      *
      * @return Вектор авторов книги.
      */
-    const std::vector<Author>& getAuthors() const {
+    const std::string& getAuthors() const {
         return authors;
     }
 };
@@ -150,7 +117,7 @@ public:
      * @param fileType Название формата книги.
      * @param fileSize Объём файла книги.
      */
-    EBook(const std::string &name, const std::vector<Author> &authors, const std::string &fileType,
+    EBook(const std::string &name, const std::string&authors, const std::string &fileType,
           const long &fileSize) : Book(name, authors),
                                   fileType(fileType),
                                   fileSize(fileSize) {}
@@ -187,8 +154,8 @@ public:
      * @param pages Количество страниц книги.
      * @param condition Состояние книги по десятибалльной шкале.
      */
-    PBook(const std::string &name, const std::vector<Author> &authors, const int &pages, const short int &condition) :
-            Book(name, authors), pages(pages), condition(condition) {}
+    PBook(const std::string &name, const std::string &author, const int &pages, const short int &condition) :
+            Book(name, author), pages(pages), condition(condition) {}
 
     /**
      * Получить количество страниц книги.
@@ -216,3 +183,4 @@ public:
      */
     bool setCondition(const short int &newCondition);
 };
+#endif //PRIVATELIBRARY_BOOK_H
