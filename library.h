@@ -1,7 +1,8 @@
-#include "book.h"
-
 #ifndef PRIVATELIBRARY_LIBRARY_H
 #define PRIVATELIBRARY_LIBRARY_H
+#pragma once
+#include <cstring>
+#include "book.h"
 
 /**
  * Перечисление типов операций с книгой
@@ -153,14 +154,14 @@ public:
      * @param name Название книги
      * @param rating Оценка книги
      */
-    void setRating(const std::string &name, short int rating);
+    void setRating(const std::string &name, const short int &rating);
 
     /**
      * Ухудшение состояния бумажной книги
      * @param name Название книги
      * @param condition Состояние книги
      */
-    void setCondition(const std::string &name, short int condition);
+    void setCondition(const std::string &name, const short int &condition);
 
     /**
      * Добавление даты чтения книги
@@ -187,5 +188,5 @@ public:
     void undo();
 
 };
-
 #endif //PRIVATELIBRARY_LIBRARY_H
+

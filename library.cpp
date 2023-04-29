@@ -109,7 +109,7 @@ void Library::removeBook(const std::string &name) {
     }
 }
 
-void Library::setRating(const std::string &name, short rating) {
+void Library::setRating(const std::string &name, const short int &rating) {
     TreeNode *node = findBook(root, name);
     if (node) {
         BookOperation gradeOperation(OperationType::GRADE_BOOK, node->book, this, rating);
@@ -117,7 +117,7 @@ void Library::setRating(const std::string &name, short rating) {
     }
 }
 
-void Library::setCondition(const std::string &name, short condition) {
+void Library::setCondition(const std::string &name, const short int &condition) {
     TreeNode *node = findBook(root, name);
     if (node) {
         PBook *pbook = dynamic_cast<PBook *>(node->book);
