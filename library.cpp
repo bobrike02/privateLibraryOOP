@@ -96,8 +96,8 @@ void Library::clear(Library::TreeNode *&node) {
     node = nullptr;
 }
 
-void Library::addBook(Book &book) {
-    BookOperation addOperation(OperationType::ADD_BOOK, &book, this);
+void Library::addBook(Book *book) {
+    BookOperation addOperation(OperationType::ADD_BOOK, book, this);
     performOperation(addOperation);
 }
 

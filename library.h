@@ -141,7 +141,7 @@ public:
      * Добавление книги в библиотеку
      * @param book Ссылка на книгу
      */
-    void addBook(Book &book);
+    void addBook(Book *book);
 
     /**
      * Удаление книги из библиотеки

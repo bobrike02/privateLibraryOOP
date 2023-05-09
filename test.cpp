@@ -72,9 +72,9 @@ int main() {
     PBook book3("The Catcher in the Rye", "J.D. Salinger", 224, 8);
 
     // Добавляем книги в библиотеку
-    library.addBook(book1);
-    library.addBook(book2);
-    library.addBook(book3);
+    library.addBook(&book1);
+    library.addBook(&book2);
+    library.addBook(&book3);
 
     // Проверяем, что книги действительно добавлены в библиотеку и что сортированный вывод работает корректно
     assert((library.getBooksListSortedByNameAscending() == "The Catcher in the Rye\nThe Great Gatsby\nWar and Peace\n"));
@@ -167,9 +167,9 @@ int main() {
     assert((library.getBooksListSortedByNameAscending() == ""));
 
     // Добавляем книги снова в библиотеку
-    library.addBook(book1);
-    library.addBook(book2);
-    library.addBook(book3);
+    library.addBook(&book1);
+    library.addBook(&book2);
+    library.addBook(&book3);
 
     // Удаляем книги из библиотеки и проверяем, что они удалились
     library.removeBook("The Great Gatsby");

@@ -13,20 +13,24 @@ import ctypes
 """
 
 
-def print_sorted_by_name(lib):
-    """ Заготовка для функции вывода списка всех книг, отсортированного по названию """
-    print("stub: выполняю вывод с сортировкой по названию")
-    return None
+def print_sorted_by_name():
+    """  Функция вывода списка всех книг, отсортированного по названию """
+    out = ctypes.create_string_buffer(100)
+    print("Список всех книг, отсортированный по названию:")
+    lib.Library_getBooksListSortedByNameAscending(library, out, ctypes.sizeof(out))
+    print(out.value.decode('utf-8'))
 
 
-def print_sorted_by_raiting(lib):
-    """ Заготовка для функции вывода списка всех книг, отсортированного по оценке """
-    print("stub: выполняю вывод с сортировкой по оценке")
-    return None
+def print_sorted_by_raiting():
+    """  Функция вывода списка всех книг, отсортированного по оценке """
+    out = ctypes.create_string_buffer(100)
+    print("Список всех книг, отсортированный по оценке:")
+    lib.Library_getBooksListSortedByRatingDescending(library, out, ctypes.sizeof(out))
+    print(out.value.decode('utf-8'))
 
 
 def add_book():
-    """ Заготовка для функции добавления книги в библиотеку """
+    """  Функция добавления книги в библиотеку """
     name = input("Введите название книги: ")
     author = input("Введите имя автора книги: ")
     is_ok = False
@@ -59,7 +63,7 @@ def add_book():
             elif type_of_book == 2:
                 while True:
                     filetype = input("Введите формат файла книги (PDF, EPUB, FB2, TXT): ")
-                    if filetype in {"PDF", "TXT", "FB2", "TXT"}:
+                    if filetype in {"PDF", "EPUB", "FB2", "TXT"}:
                         break
                     else:
                         print("Допустимые форматы - PDF, EPUB, FB2, TXT!")
@@ -76,37 +80,45 @@ def add_book():
             is_ok = True
         except ValueError:
             print("Пожалуйста, введите 1 или 2!")
-    print(f"stub: добавляю книгу в библиотеку c названием - {name}, автором - {author}")
+    print(f"добавляю книгу в библиотеку c названием - {name}, автором - {author}")
+    author = ctypes.c_char_p(author.encode('utf-8'))
+    name = ctypes.c_char_p(name.encode('utf-8'))
+    if is_ok:
+        if type_of_book == 2:
+            lib.Library_addEBook(library, name, author, ctypes.c_char_p(filetype.encode('utf-8')), filesize)
+        else:
+            lib.Library_addPBook(library, name, author, pages, condition)
 
 
-def delete_book(lib):
-    """ Заготовка для функции удаления книги """
+def delete_book():
+    """  Функция удаления книги """
     name = input("Введите название книги для удаления: ")
-    author = input("Введите имя автора книги: ")
-    print(f"stub: выполняю удаление книги c названием - {name}, автором - {author} из библиотеки")
+    print(f"выполняю удаление книги c названием - {name} из библиотеки")
+    name = ctypes.c_char_p(name.encode('utf-8'))
+    lib.Library_removeBook(library, name)
 
 
-def set_raiting(lib):
-    """ Заготовка для функции проставления оценки книге из библиотеки """
+def set_raiting():
+    """  Функция проставления оценки книге из библиотеки """
     name = input("Введите название книги для выставления оценки: ")
-    author = input("Введите имя автора книги: ")
     while True:
-        raiting = input("Введите оценку книги как число от 1 до 10: ")
+        rating = input("Введите оценку книги как число от 1 до 10: ")
         try:
-            raiting = int(raiting)
-            if 1 <= raiting <= 10:
+            rating = int(rating)
+            if 1 <= rating <= 10:
                 break
             else:
                 print("Оценка книги это число от 1 до 10!")
         except ValueError:
             print("Оценка книги - число от 1 до 10!")
-    print(f"stub: выставляю оценку книге c названием - {name}, автором - {author}")
+    print(f"выставляю оценку книге c названием - {name}")
+    name = ctypes.c_char_p(name.encode('utf-8'))
+    lib.Library_setRating(library, name, rating)
 
 
-def set_condition(lib):
-    """ Заготовка для функции проставления состояния книги """
+def set_condition():
+    """  Функция проставления состояния книги """
     name = input("Введите имя бумажной книги для оценки состояния: ")
-    author = input("Введите имя автора книги: ")
     while True:
         condition = input("Введите оценку состояния книги как число от 1 до 10: ")
         try:
@@ -117,13 +129,19 @@ def set_condition(lib):
                 print("Состояние книги это число от 1 до 10!")
         except ValueError:
             print("Состояние книги - число от 1 до 10!")
-    print(f"stub: выставляю состояние книге c названием - {name}, автором - {author}")
+    print(f"выставляю состояние книге c названием - {name}")
+    name = ctypes.c_char_p(name.encode('utf-8'))
+    try:
+        lib.Library_setCondition(library, name, condition)
+    except OSError:
+        # в случае если пользователь попытался выставить состояние
+        # для электронной книги, будет созданно исключение
+        print(f"Книга является электронной!")
 
 
-def add_reading_date(lib):
-    """ Заготовка для функции добавления даты прочтения """
+def add_reading_date():
+    """  Функция добавления даты прочтения """
     name = input("Введите название книги для добавления даты прочтения: ")
-    author = input("Введите имя автора книги: ")
     while True:
         date = input("Введите дату прочтения книги как положительное число: ")
         try:
@@ -134,17 +152,20 @@ def add_reading_date(lib):
                 print("Дата прочтения это положительное число!")
         except ValueError:
             print("Дата прочтения это положительное число!")
-    print(f"stub: добавляю дату прочтения для книги c названием - {name}, автором - {author}")
+    print(f"добавляю дату прочтения для книги c названием - {name}")
+    name = ctypes.c_char_p(name.encode('utf-8'))
+    lib.Library_addReadingDate(library, name, date)
 
 
-def undo(lib):
-    """ Заготовка для функции отмены операции """
-    print("stub: выполняю отмену последней операции")
+def undo():
+    """  Функция отмены операции """
+    print("выполняю отмену последней операции")
+    lib.Library_undo(library)
 
 
 def quit_lib():
     """ Выйти из программы """
-    print('stub: завершаю программу')
+    print('завершаю программу')
     exit(0)
 
 
@@ -161,69 +182,52 @@ def print_menu(menu):
 
 
 def init_binding():
-    # Загружаем библиотеку
-    lib = ctypes.cdll.LoadLibrary("./interface.dll")
+    """ Функция для загрузки C++ библиотеки """
+    # Определение класса Library для ctypes
+    class Library(ctypes.Structure):
+        pass
 
-    # Определяем аргументы и возвращаемое значение для функций
-    lib.Library_new.argtypes = []
-    lib.Library_new.restype = ctypes.c_void_p
+    # Загрузка dll
+    libdll = ctypes.cdll.LoadLibrary("./cmake-build-debug/libshared.dll")
 
-    lib.Library_addEBook.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_short]
-    lib.Library_addEBook.restype = None
+    # Определение argtypes and restypes для каждой функции
+    libdll.Library_new.restype = ctypes.POINTER(Library)
 
-    lib.Library_addPBook.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_short, ctypes.c_short]
-    lib.Library_addPBook.restype = None
+    libdll.Library_addEBook.argtypes = [ctypes.POINTER(Library), ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p,
+                                        ctypes.c_long]
+    libdll.Library_addEBook.restype = None
 
-    lib.Library_removeBook.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
-    lib.Library_removeBook.restype = None
+    libdll.Library_addPBook.argtypes = [ctypes.POINTER(Library), ctypes.c_char_p, ctypes.c_char_p, ctypes.c_int,
+                                        ctypes.c_short]
+    libdll.Library_addPBook.restype = None
 
-    lib.Library_setRating.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_short]
-    lib.Library_setRating.restype = None
+    libdll.Library_removeBook.argtypes = [ctypes.POINTER(Library), ctypes.c_char_p]
+    libdll.Library_removeBook.restype = None
 
-    lib.Library_setCondition.argtypes = [ctypes.c_void_p,
-                                         ctypes.c_char_p,
-                                         ctypes.c_size_t]
-    lib.Library_setCondition.restype = None
+    libdll.Library_setRating.argtypes = [ctypes.POINTER(Library), ctypes.c_char_p, ctypes.c_short]
+    libdll.Library_setRating.restype = None
 
-    lib.Library_addReadingDate.argtypes = [ctypes.c_void_p,
-                                           ctypes.c_char_p,
-                                           ctypes.c_size_t]
-    lib.Library_addReadingDate.restype = None
+    libdll.Library_setCondition.argtypes = [ctypes.POINTER(Library), ctypes.c_char_p, ctypes.c_short]
+    libdll.Library_setCondition.restype = None
 
-    lib.Library_getBooksListSortedByNameAscending.argtypes = [ctypes.c_void_p]
-    lib.Library_getBooksListSortedByNameAscending.restype = ctypes.c_char_p
+    libdll.Library_addReadingDate.argtypes = [ctypes.POINTER(Library), ctypes.c_char_p, ctypes.c_short]
+    libdll.Library_addReadingDate.restype = None
 
-    lib.Library_getBooksListSortedByRatingDescending.argtypes = [ctypes.c_void_p]
-    lib.Library_getBooksListSortedByRatingDescending.restype = ctypes.c_char_p
+    libdll.Library_getBooksListSortedByNameAscending.argtypes = [ctypes.POINTER(Library), ctypes.c_char_p, ctypes.c_int]
+    libdll.Library_getBooksListSortedByNameAscending.restype = None
 
-    lib.Library_undo.argtypes = [ctypes.c_void_p]
-    lib.Library_undo.restype = None
-    return lib
+    libdll.Library_getBooksListSortedByRatingDescending.argtypes = [ctypes.POINTER(Library),
+                                                                    ctypes.c_char_p, ctypes.c_int]
+    libdll.Library_getBooksListSortedByRatingDescending.restype = None
 
+    libdll.Library_undo.argtypes = [ctypes.POINTER(Library)]
+    libdll.Library_undo.restype = None
 
-def test(lib):
-    library = lib.Library_new()
-    name = ctypes.c_char_p('War and Peace'.encode('utf-8'))
-    author = ctypes.c_char_p('Lew Tolstoy'.encode('utf-8'))
-    lib.Library_addEBook(library, name, author, ctypes.c_char_p('PDF'.encode('utf-8')), 1024)
-    name = ctypes.c_char_p('War and Peace1'.encode('utf-8'))
-    author = ctypes.c_char_p('Lew Tolstoy1'.encode('utf-8'))
-    lib.Library_addPBook(library, name, author, 100, 3)
-    lib.Library_setRating(library, name, 4)
-    lib.Library_setCondition(library, name, 2)
-    lib.Library_addReadingDate(library, name, 20220429)
-    out = ctypes.create_string_buffer(100)
-    lib.Library_getBooksListSortedByNameAscending(library, out, ctypes.sizeof(out))
-    print(out.value.decode('utf-8'))
-    out = ctypes.create_string_buffer(100)
-    lib.Library_getBooksListSortedByRatingDescending(library, out, ctypes.sizeof(out))
-    print(out.value.decode('utf-8'))
-    lib.Library_undo(library)
+    return libdll
 
 
-def main(lib):
+def main():
     """ Функция главного меню """
-
     menu = [("Вывести список всех книг, отсортированный по названию", print_sorted_by_name),
             ("Вывести список всех книг, отсортированный по оценке", print_sorted_by_raiting),
             ("Добавить книгу в библиотеку", add_book),
@@ -240,4 +244,5 @@ def main(lib):
 
 if __name__ == '__main__':
     lib = init_binding()
-    test(lib)
+    library = lib.Library_new()
+    main()

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(privateLibrary)
+project(privateLibraryOOP)
 
 add_library(shared SHARED library.cpp interface.cpp book.cpp) # compile "C_dll.cpp" and create a SHARED library called "shared"
 set(CMAKE_CXX_STANDARD 14)
